@@ -1,49 +1,7 @@
-import React, { Fragment } from 'react';
+import React from 'react';
 import ReactDOM from 'react-dom';
-import './index.css';
-
-function Square(props) {
-    return (
-        <Fragment>
-            <button className={"square "+((props.className!=null)?props.className:'')} onClick={props.onClick}>
-                {props.value}
-            </button>
-        </Fragment>
-    );
-}
-
-class Board extends React.Component {
-
-    renderSquare(i) {
-        return (<Square
-            className={this.props.classes[i]} 
-            value={this.props.squares[i]}
-            onClick={() => this.props.onClick(i)}
-        />);
-    }
-
-    render() {
-        return (
-            <div>
-                <div className="board-row">
-                    {this.renderSquare(0)}
-                    {this.renderSquare(1)}
-                    {this.renderSquare(2)}
-                </div>
-                <div className="board-row">
-                    {this.renderSquare(3)}
-                    {this.renderSquare(4)}
-                    {this.renderSquare(5)}
-                </div>
-                <div className="board-row">
-                    {this.renderSquare(6)}
-                    {this.renderSquare(7)}
-                    {this.renderSquare(8)}
-                </div>
-            </div>
-        );
-    }
-}
+import './css/index.css';
+import { Board } from './board.js';
 
 class Game extends React.Component {
     constructor(props) {
