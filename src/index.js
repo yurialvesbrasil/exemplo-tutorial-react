@@ -5,7 +5,7 @@ import './index.css';
 function Square(props) {
     return (
         <Fragment>
-            <button className="square" onClick={props.onClick}>
+            <button className={"square "+((props.className!=null)?props.className:'')} onClick={props.onClick}>
                 {props.value}
             </button>
         </Fragment>
@@ -16,6 +16,7 @@ class Board extends React.Component {
 
     renderSquare(i) {
         return (<Square
+            className={this.props.classes[i]} 
             value={this.props.squares[i]}
             onClick={() => this.props.onClick(i)}
         />);
@@ -50,7 +51,8 @@ class Game extends React.Component {
         this.state = {
             history: [{
                 squares: Array(9).fill(null),
-                referencia: Array(3).fill(null),
+                classes: Array(9).fill(null),
+                referencia: [null,null,null],
             }],
             xIsNext: true,
             stepNumber: 0
@@ -90,6 +92,7 @@ class Game extends React.Component {
         const history = this.state.history.slice(0, this.state.stepNumber + 1);
         const current = history[history.length - 1];
         const squares = current.squares.slice();
+        const classes = current.classes.slice();
         let referencia = current.referencia.slice();
         if (calculateWinner(squares) || squares[i]) {
             return;
@@ -97,12 +100,21 @@ class Game extends React.Component {
 
         //Armazena referencia
         referencia = this.getReferencia(i);
+        
+        //Zara array
+        for ( var x = 0; x < classes.length; x++ ){
+            classes[x] = "";
+        }
+
+        //Atualiza classes 
+        classes[i] = "negrito";
 
         squares[i] = this.state.xIsNext ? 'X' : 'O';
         this.setState({
             history: history.concat([{
                 squares: squares,
                 referencia: referencia,
+                classes: classes
             }]),
             xIsNext: !this.state.xIsNext,
             stepNumber: history.length
@@ -143,6 +155,7 @@ class Game extends React.Component {
             <div className="game">
                 <div className="game-board">
                     <Board
+                        classes={current.classes}
                         squares={current.squares}
                         onClick={(i) => this.handleClick(i)}
                     />
