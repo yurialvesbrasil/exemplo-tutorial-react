@@ -54,16 +54,6 @@ class Game extends React.Component {
         };
     }
 
-    jumpTo(step) {
-        const history = this.state.history.slice(0, step +1);
-       
-        this.setState({
-            history: history,
-            stepNumber: step,
-            xIsNext: (step % 2) === 0,
-        });
-    }
-
     handleClick(i) {
         const history = this.state.history.slice(0, this.state.stepNumber + 1);
         const current = history[history.length - 1];
@@ -78,6 +68,13 @@ class Game extends React.Component {
             }]),
             xIsNext: !this.state.xIsNext,
             stepNumber: history.length
+        });
+    }
+
+    jumpTo(step) {       
+        this.setState({
+            stepNumber: step,
+            xIsNext: (step % 2) === 0,
         });
     }
 
