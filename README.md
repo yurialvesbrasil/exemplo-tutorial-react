@@ -1,4 +1,4 @@
-# Getting Started with Create React App
+# Exemplo: Jogo da Velha do Tutorial do React.
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
