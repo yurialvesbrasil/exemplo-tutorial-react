@@ -1,12 +1,14 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 
 function Square(props) {
     return (
-        <button className="square" onClick={props.onClick}>
-            {props.value}
-        </button>
+        <Fragment>
+            <button className="square" onClick={props.onClick}>
+                {props.value}
+            </button>
+        </Fragment>
     );
 }
 
@@ -48,30 +50,66 @@ class Game extends React.Component {
         this.state = {
             history: [{
                 squares: Array(9).fill(null),
+                referencia: Array(3).fill(null),
             }],
             xIsNext: true,
             stepNumber: 0
         };
     }
 
+
+    getReferencia(i) {
+        const jogador = this.state.xIsNext ? 'O' : 'X';
+        switch (i+1) {
+            case 1:
+                return [jogador, 1, 1];
+            case 2:
+                return [jogador, 2, 1]; 
+            case 3:
+                return [jogador, 3, 1];
+            case 4:
+                return [jogador, 1, 2];
+            case 5:
+                return [jogador, 2, 2];
+            case 6:
+                return [jogador, 3, 2];
+            case 7:
+                return [jogador, 1, 3];
+            case 8:
+                return [jogador, 2, 3];
+            case 9:
+                return [jogador, 3, 3];
+            default:
+                return [];    
+
+        }
+
+    }
+
     handleClick(i) {
         const history = this.state.history.slice(0, this.state.stepNumber + 1);
         const current = history[history.length - 1];
         const squares = current.squares.slice();
+        let referencia = current.referencia.slice();
         if (calculateWinner(squares) || squares[i]) {
             return;
         }
+
+        //Armazena referencia
+        referencia = this.getReferencia(i);
+
         squares[i] = this.state.xIsNext ? 'X' : 'O';
         this.setState({
             history: history.concat([{
                 squares: squares,
+                referencia: referencia,
             }]),
             xIsNext: !this.state.xIsNext,
             stepNumber: history.length
         });
     }
 
-    jumpTo(step) {       
+    jumpTo(step) {
         this.setState({
             stepNumber: step,
             xIsNext: (step % 2) === 0,
@@ -85,7 +123,7 @@ class Game extends React.Component {
 
         const moves = history.map((step, move) => {
             const desc = move ?
-                'Go to move #' + move :
+                'Go to move #' + move +' | '+ history[move].referencia[0]+"->("+history[move].referencia[1]+","+history[move].referencia[2]+")":
                 'Go to game start';
             return (
                 <li key={move}>
