@@ -21,7 +21,7 @@ export class Board extends React.Component {
         for (var y = 0; y <= this.props.rows - 1; y++) {
             let cols = []
             for (let x = 0; x <= this.props.cols - 1; x++) {
-                cols.push(this.renderSquare(x+(y*3)));
+                cols.push(this.renderSquare(x+(y*this.props.rows)));
             }
             rows.push(this.renderRow(cols));
         }

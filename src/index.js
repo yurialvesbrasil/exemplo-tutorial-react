@@ -14,23 +14,22 @@ class Game extends React.Component {
             }],
             xIsNext: true,
             stepNumber: 0,
-            cols:3,
-            rows:3
+            cols:6,
+            rows:6
         };
     }
 
 
     getReferencia(i) {
         const jogador = this.state.xIsNext ? 'O' : 'X';
-        console.log(`${i} - ${Math.trunc((i/this.state.cols))+1} - ${Math.trunc((i/this.state.rows))+i}`)
-        return [jogador, Math.trunc((i/this.state.cols))+1, Math.trunc((i/this.state.rows))];
+        console.log(`${i} - ${Math.trunc((i*this.state.rows)/(this.state.rows*this.state.cols))} - ${Math.trunc(i-(this.state.cols * Math.trunc((i*this.state.rows)/(this.state.rows*this.state.cols))))}`)
+        return [jogador, Math.trunc((i*this.state.rows)/(this.state.rows*this.state.cols)) +1, Math.trunc(i-(this.state.cols * Math.trunc((i*this.state.rows)/(this.state.rows*this.state.cols))))+1];
     }
 
     handleClick(i) {
         const history = this.state.history.slice(0, this.state.stepNumber + 1);
         const current = history[history.length - 1];
         const squares = current.squares.slice();
-        const classes = current.classes.slice();
         let referencia = current.referencia.slice();
         if (calculateWinner(squares) || squares[i]) {
             return;
@@ -40,9 +39,7 @@ class Game extends React.Component {
         referencia = this.getReferencia(i);
         
         //Zara array
-        for ( var x = 0; x < classes.length; x++ ){
-            classes[x] = "";
-        }
+        const classes = [];
 
         //Atualiza classes 
         classes[i] = "negrito";
@@ -69,7 +66,7 @@ class Game extends React.Component {
     render() {
         const history = this.state.history;
         const current = history[this.state.stepNumber];
-        const winner = calculateWinner(current.squares);
+        const winner = calculateWinner(current.squares, this.state.rows, this.state.cols);
 
         const moves = history.map((step, move) => {
             const desc = move ?
@@ -109,21 +106,23 @@ class Game extends React.Component {
     }
 }
 
-function calculateWinner(squares) {
-    const lines = [
-        [0, 1, 2],
-        [3, 4, 5],
-        [6, 7, 8],
-        [0, 3, 6],
-        [1, 4, 7],
-        [2, 5, 8],
-        [0, 4, 8],
-        [2, 4, 6],
-    ];
-    for (let i = 0; i < lines.length; i++) {
-        const [a, b, c] = lines[i];
-        if (squares[a] && squares[a] === squares[b] && squares[a] === squares[c]) {
-            return squares[a];
+function calculateWinner(squares , rows, cols) {
+    if((rows === 3)&&(cols === 3)){
+        const lines = [
+            [0, 1, 2],
+            [3, 4, 5],
+            [6, 7, 8],
+            [0, 3, 6],
+            [1, 4, 7],
+            [2, 5, 8],
+            [0, 4, 8],
+            [2, 4, 6],
+        ];
+        for (let i = 0; i < lines.length; i++) {
+            const [a, b, c] = lines[i];
+            if (squares[a] && squares[a] === squares[b] && squares[a] === squares[c]) {
+                return squares[a];
+            }
         }
     }
     return null;
