@@ -8,42 +8,22 @@ class Game extends React.Component {
         super(props);
         this.state = {
             history: [{
-                squares: Array(9).fill(null),
-                classes: Array(9).fill(null),
+                squares: [],
+                classes: [],
                 referencia: [null,null,null],
             }],
             xIsNext: true,
-            stepNumber: 0
+            stepNumber: 0,
+            cols:3,
+            rows:3
         };
     }
 
 
     getReferencia(i) {
         const jogador = this.state.xIsNext ? 'O' : 'X';
-        switch (i+1) {
-            case 1:
-                return [jogador, 1, 1];
-            case 2:
-                return [jogador, 2, 1]; 
-            case 3:
-                return [jogador, 3, 1];
-            case 4:
-                return [jogador, 1, 2];
-            case 5:
-                return [jogador, 2, 2];
-            case 6:
-                return [jogador, 3, 2];
-            case 7:
-                return [jogador, 1, 3];
-            case 8:
-                return [jogador, 2, 3];
-            case 9:
-                return [jogador, 3, 3];
-            default:
-                return [];    
-
-        }
-
+        console.log(`${i} - ${Math.trunc((i/this.state.cols))+1} - ${Math.trunc((i/this.state.rows))+i}`)
+        return [jogador, Math.trunc((i/this.state.cols))+1, Math.trunc((i/this.state.rows))];
     }
 
     handleClick(i) {
@@ -113,6 +93,8 @@ class Game extends React.Component {
             <div className="game">
                 <div className="game-board">
                     <Board
+                        cols={this.state.cols}
+                        rows={this.state.rows}
                         classes={current.classes}
                         squares={current.squares}
                         onClick={(i) => this.handleClick(i)}
