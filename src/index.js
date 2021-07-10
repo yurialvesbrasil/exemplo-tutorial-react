@@ -4,6 +4,7 @@ import './css/index.css';
 import { Board } from './board.js';
 import { ToggleButtonGroup, ToggleButton } from '@material-ui/lab';
 import { ArrowDropUp, ArrowDropDown } from '@material-ui/icons';
+import {SelectedListItem} from './tamanho.js';
 class Game extends React.Component {
     constructor(props) {
         super(props);
@@ -16,11 +17,43 @@ class Game extends React.Component {
             ordem: "0",
             xIsNext: true,
             stepNumber: 0,
-            cols: 6,
-            rows: 6
+            cols: 4,
+            rows: 4,
+            selectedIndex: 0
         };
     }
 
+
+    handleListItemClick = (event, index) => {
+        if(index === 0)
+        this.setState({
+            history: [{
+                squares: [],
+                classes: [],
+                referencia: [null, null, null],
+            }],
+            ordem: "0",
+            xIsNext: true,
+            stepNumber: 0,
+            cols: 3,
+            rows: 3,
+            selectedIndex: index
+        });
+        else if(index === 1)
+        this.setState({
+            history: [{
+                squares: [],
+                classes: [],
+                referencia: [null, null, null],
+            }],
+            ordem: "0",
+            xIsNext: true,
+            stepNumber: 0,
+            cols: 4,
+            rows: 4,
+            selectedIndex: index
+        }); 
+    };
 
     getReferencia(i) {
         const jogador = this.state.xIsNext ? 'O' : 'X';
@@ -33,7 +66,7 @@ class Game extends React.Component {
         const current = history[history.length - 1];
         const squares = current.squares.slice();
         let referencia = current.referencia.slice();
-        if (calculateWinner(squares) || squares[i]) {
+        if (calculateWinner(squares, this.state.rows, this.state.cols) || squares[i]) {
             return;
         }
 
@@ -117,8 +150,10 @@ class Game extends React.Component {
 
         return (
             <div className="game">
-                <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" />
-                <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />
+                <SelectedListItem
+                    handleListItemClick={(event, index) => this.handleListItemClick(event, index)}
+                    selectedIndex={this.state.selectedIndex}
+                />
                 <div className="game-board">
                     <Board
                         cols={this.state.cols}
@@ -155,19 +190,49 @@ function calculateWinner(squares, rows, cols) {
             [0, 1, 2],
             [3, 4, 5],
             [6, 7, 8],
+           
             [0, 3, 6],
             [1, 4, 7],
             [2, 5, 8],
+           
             [0, 4, 8],
             [2, 4, 6],
         ];
+
         for (let i = 0; i < lines.length; i++) {
             const [a, b, c] = lines[i];
             if (squares[a] && squares[a] === squares[b] && squares[a] === squares[c]) {
                 return squares[a];
             }
-        }
+        }  
+        
+        return null;
+    }else if ((rows === 4) && (cols === 4)){
+        const lines = [
+            [0, 1, 2, 3],
+            [4, 5, 6, 7],
+            [8, 9, 10, 11],
+            [12, 13, 14, 15],
+            
+            [0, 4, 8, 12],
+            [1, 5, 9, 13],
+            [2, 6, 10, 14],
+            [3, 7, 11, 15],
+
+            [0, 5, 10, 15],
+            [3, 6, 9, 12],
+        ];
+
+        for (let i = 0; i < lines.length; i++) {
+            const [a, b, c, d] = lines[i];
+            if (squares[a] && squares[a] === squares[b] && squares[a] === squares[c] && squares[a] === squares[d]) {
+                return squares[a];
+            }
+        }  
+        
+        return null;
     }
+
     return null;
 }
 
